@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Carousel, Flex, Grid, WingBlank } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 import { Link } from "react-router-dom";
+import SearchBar from "../../components/SearchBar";
 
 import styles from "./index.module.scss";
 
@@ -18,6 +19,7 @@ export default class Home extends Component {
       swipers: null,
       groups: null,
       news: null,
+      cityName: "深圳"
     };
   }
 
@@ -158,7 +160,11 @@ export default class Home extends Component {
                     alt=""
                   />
                 </div>
-                <Flex className={styles.content} direction="column" justify="between">
+                <Flex
+                  className={styles.content}
+                  direction="column"
+                  justify="between"
+                >
                   <h3 className={styles.title}>{item.title}</h3>
                   <Flex className={styles.info} justify="between">
                     <p>{item.from}</p>
@@ -178,6 +184,7 @@ export default class Home extends Component {
 
     return (
       <div className={styles.root}>
+        <SearchBar cityName={this.state.cityName} />
         {/* 渲染轮播图 */}
         {swipers && this.renderSwiper()}
         {/* 首页导航菜单渲染 */}
