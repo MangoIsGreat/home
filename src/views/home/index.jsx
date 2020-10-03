@@ -103,7 +103,7 @@ export default class Home extends Component {
       <Flex className={styles.nav}>
         {this.navs.map((item) => {
           return (
-            <Flex.Item>
+            <Flex.Item key={item.text}>
               <Link to={item.path}>
                 <img src={item.icon} alt="" />
                 <p>{item.text}</p>
