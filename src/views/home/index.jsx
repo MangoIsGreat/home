@@ -19,7 +19,7 @@ export default class Home extends Component {
       swipers: null,
       groups: null,
       news: null,
-      cityName: "深圳"
+      cityName: "深圳",
     };
   }
 
