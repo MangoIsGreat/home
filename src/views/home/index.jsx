@@ -54,6 +54,7 @@ export default class Home extends Component {
 
   render() {
     const { swipers } = this.state;
+    
     return (
       <div className={styles.root}>
         {/* 渲染轮播图 */}

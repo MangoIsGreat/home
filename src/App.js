@@ -3,6 +3,7 @@ import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 import Layout from './views/layout'
 import Login from './views/login'
 import NotFound from './views/NotFound'
+import './App.css'
 // 导入字体图标
 import './assets/fonts/iconfont.css'
 
