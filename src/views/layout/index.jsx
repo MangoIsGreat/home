@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect, Link } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "../home";
 import HomeList from "../homeList";
 import News from "../news";
@@ -13,7 +13,7 @@ export default class Layout extends Component {
   constructor(props) {
     super();
     this.state = {
-      selectedPath: "/layout/index",
+      selectedPath: props.location.pathname
     };
   }
 
@@ -55,6 +55,10 @@ export default class Layout extends Component {
                   this.setState({
                     selectedPath: item.path
                   })
+
+                  if (this.state.selectedPath !== item.path) {
+                    this.props.history.push(item.path)
+                  }
               }}
             ></TabBar.Item>
           );
