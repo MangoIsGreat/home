@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Carousel, Flex, Grid } from "antd-mobile";
+import { Carousel, Flex, Grid, WingBlank } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 import { Link } from "react-router-dom";
 
@@ -17,6 +17,7 @@ export default class Home extends Component {
     this.state = {
       swipers: null,
       groups: null,
+      news: null,
     };
   }
 
@@ -32,6 +33,8 @@ export default class Home extends Component {
     this.getSwipperData();
 
     this.getGroupsData();
+
+    this.getNewsData();
   }
 
   getSwipperData = async () => {
@@ -52,6 +55,18 @@ export default class Home extends Component {
     if (result.data.status === 200) {
       this.setState({
         groups: result.data.body,
+      });
+    }
+  };
+
+  getNewsData = async () => {
+    const result = await this.axios.get(
+      "/home/news?area=AREA%7C88cff55c-aaa4-e2e0"
+    );
+
+    if (result.data.status === 200) {
+      this.setState({
+        news: result.data.body,
       });
     }
   };
@@ -119,7 +134,7 @@ export default class Home extends Component {
                 <p>{item.desc}</p>
               </div>
               <div className={styles.right}>
-                  <img src={`${BASE_URL}${item.imgSrc}`} alt=""/>
+                <img src={`${BASE_URL}${item.imgSrc}`} alt="" />
               </div>
             </div>
           )}
@@ -128,8 +143,38 @@ export default class Home extends Component {
     );
   }
 
+  renderNews() {
+    return (
+      <div className={styles.news}>
+        <h3 className={styles.groupTitle}>最新资讯</h3>
+        <WingBlank size="md">
+          {this.state.news.map((item) => {
+            return (
+              <div key={item.id} className={styles.newsItem}>
+                <div className={styles.imgWrap}>
+                  <img
+                    className={styles.img}
+                    src={`${BASE_URL}${item.imgSrc}`}
+                    alt=""
+                  />
+                </div>
+                <Flex className={styles.content} direction="column" justify="between">
+                  <h3 className={styles.title}>{item.title}</h3>
+                  <Flex className={styles.info} justify="between">
+                    <p>{item.from}</p>
+                    <p>{item.date}</p>
+                  </Flex>
+                </Flex>
+              </div>
+            );
+          })}
+        </WingBlank>
+      </div>
+    );
+  }
+
   render() {
-    const { swipers, groups } = this.state;
+    const { swipers, groups, news } = this.state;
 
     return (
       <div className={styles.root}>
@@ -139,6 +184,8 @@ export default class Home extends Component {
         {this.renderNavs()}
         {/* 渲染租房小组 */}
         {groups && this.renderGroups()}
+        {/* 渲染最新资讯 */}
+        {news && this.renderNews()}
       </div>
     );
   }
