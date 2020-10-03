@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// 引入axios，webpack打包时将会形成依赖：
+import './utils/axios'
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
