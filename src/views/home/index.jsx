@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Carousel, Flex } from "antd-mobile";
+import { Carousel, Flex, Grid } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 import { Link } from "react-router-dom";
 
@@ -16,6 +16,7 @@ export default class Home extends Component {
 
     this.state = {
       swipers: null,
+      groups: null,
     };
   }
 
@@ -29,6 +30,8 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.getSwipperData();
+
+    this.getGroupsData();
   }
 
   getSwipperData = async () => {
@@ -37,6 +40,18 @@ export default class Home extends Component {
     if (result.data.status === 200) {
       this.setState({
         swipers: result.data.body,
+      });
+    }
+  };
+
+  getGroupsData = async () => {
+    const result = await this.axios.get(
+      "/home/groups?area=AREA%7C88cff55c-aaa4-e2e0"
+    );
+
+    if (result.data.status === 200) {
+      this.setState({
+        groups: result.data.body,
       });
     }
   };
@@ -83,8 +98,38 @@ export default class Home extends Component {
     );
   }
 
+  renderGroups() {
+    return (
+      <div className={styles.groups}>
+        <Flex justify="between">
+          <Flex.Item style={{ fontSize: 18, fontWeight: "bold" }}>
+            租房小组
+          </Flex.Item>
+          <Flex.Item align="end">更多</Flex.Item>
+        </Flex>
+        <Grid
+          data={this.state.groups}
+          columnNum={2}
+          square={false}
+          hasLine={false}
+          renderItem={(item) => (
+            <div className={styles.navItem}>
+              <div className={styles.left}>
+                <p>{item.title}</p>
+                <p>{item.desc}</p>
+              </div>
+              <div className={styles.right}>
+                  <img src={`${BASE_URL}${item.imgSrc}`} alt=""/>
+              </div>
+            </div>
+          )}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { swipers } = this.state;
+    const { swipers, groups } = this.state;
 
     return (
       <div className={styles.root}>
@@ -92,6 +137,8 @@ export default class Home extends Component {
         {swipers && this.renderSwiper()}
         {/* 首页导航菜单渲染 */}
         {this.renderNavs()}
+        {/* 渲染租房小组 */}
+        {groups && this.renderGroups()}
       </div>
     );
   }
