@@ -3,6 +3,7 @@ import { Carousel, Flex, Grid, WingBlank } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 import { Link } from "react-router-dom";
 import SearchBar from "../../components/SearchBar";
+import { getCurrentCity } from "../../utils/city";
 
 import styles from "./index.module.scss";
 
@@ -31,7 +32,12 @@ export default class Home extends Component {
     { icon: image4, text: "去出租", path: "/rent/add" },
   ];
 
-  componentDidMount() {
+  async componentDidMount() {
+    const city = await getCurrentCity();
+    this.setState({
+      cityName: city.label,
+    });
+
     this.getSwipperData();
 
     this.getGroupsData();
