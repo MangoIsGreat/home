@@ -1,3 +1,5 @@
+import { axios } from "./axios";
+
 // 从本地缓存中获取“城市”数据：
 const getCity = () => {
   return window.localStorage.getItem("my_city");
@@ -18,8 +20,12 @@ const getCurrentCity = () => {
   } else {
     return new Promise((resolve, reject) => {
       var myCity = new BMap.LocalCity();
-      myCity.get((result) => {
-        console.log(result);
+      myCity.get(async (result) => {
+        const res = await axios.get(`/area/info?name=${result.name}`)
+
+        setCity(res.data.body)
+
+        resolve(res.data.body)
       });
     });
   }
