@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import MyNavBar from "../../components/MyNavBar";
+import { getCurrentCity } from "../../utils/city";
 
 export default class CityList extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      cityListObj: null,
+      cityIndexList: null,
+    };
+  }
+
   componentDidMount() {
     this.getCityData();
   }
@@ -12,7 +22,7 @@ export default class CityList extends Component {
     this.dealWithCityData(result.data.body);
   };
 
-  dealWithCityData = (cityData) => {
+  dealWithCityData = async (cityData) => {
     const tempObj = {};
 
     cityData.forEach((city) => {
@@ -27,8 +37,20 @@ export default class CityList extends Component {
 
     const IndexObjectKeys = Object.keys(tempObj).sort();
 
-    console.log(tempObj);
-    console.log(IndexObjectKeys);
+    // 处理热门城市数据：
+    const result = await this.axios.get("/area/hot");
+    tempObj["hot"] = result.data.body;
+    IndexObjectKeys.unshift("hot");
+
+    // 处理定位城市数据：
+    const currentCity = await getCurrentCity();
+    tempObj["#"] = [currentCity];
+    IndexObjectKeys.unshift("#");
+
+    this.setState({
+      cityListObj: tempObj,
+      cityIndexList: IndexObjectKeys,
+    });
   };
 
   render() {
