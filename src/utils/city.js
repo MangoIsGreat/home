@@ -9,12 +9,19 @@ const setCity = (city) => {
 };
 
 // 获取当前数据的方法：
+const BMap = window.BMap;
 const getCurrentCity = () => {
   const city = getCity();
 
   if (city) {
     return Promise.resolve(JSON.parse(city));
   } else {
+    return new Promise((resolve, reject) => {
+      var myCity = new BMap.LocalCity();
+      myCity.get((result) => {
+        console.log(result);
+      });
+    });
   }
 };
 
