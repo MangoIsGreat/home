@@ -7,10 +7,15 @@ import * as serviceWorker from './serviceWorker';
 // 引入axios，webpack打包时将会形成依赖：
 import './utils/axios'
 
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
 
