@@ -22,7 +22,7 @@ function SearchBar({ cityName, history }) {
           <span>请输入小区或地址</span>
         </div>
       </Flex>
-      <i className="iconfont icon-map" />
+      <i onClick={() => {history.push("/map")}} className="iconfont icon-map" />
     </Flex>
   );
 }
