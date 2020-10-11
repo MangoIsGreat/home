@@ -108,11 +108,41 @@ export default class Map extends Component {
     });
   };
 
-  renderRectOverlay = () => {};
+  renderRectOverlay = (originData) => {
+    originData.data.body.forEach((item) => {
+      const {
+        label: name,
+        value,
+        count,
+        coord: { latitude, longitude },
+      } = item;
+
+      var point = new BMap.Point(longitude, latitude);
+
+      var opts = {
+        position: point, // 指定文本标注所在的地理位置
+        offset: new BMap.Size(50, -50), //设置文本偏移量
+      };
+
+      var label = new BMap.Label("", opts); // 创建文本标注对象
+
+      label.setStyle(labelStyle);
+
+      label.setContent(`
+      <div class=${styles.rect}>
+        <span class=${styles.housename}>${name}</span>
+        <span class=${styles.housenum}>${count}</span>
+        <i class=${styles.arrow}></i>
+      </div>
+    `);
+
+      this.map.addOverlay(label);
+    });
+  };
 
   // 添加覆盖物
   renderOverlays = async (id) => {
-    Toast.loading("数据加载中...");
+    Toast.loading("数据加载中...", 0);
     const result = await this.axios.get(`/area/map?id=${id}`);
     Toast.hide();
 
@@ -121,7 +151,7 @@ export default class Map extends Component {
     if (type === "circle") {
       this.renderCircleOverlay(result, nextZoom);
     } else {
-      this.renderRectOverlay();
+      this.renderRectOverlay(result);
     }
   };
 
