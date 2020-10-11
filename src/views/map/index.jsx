@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
+import { Toast } from "antd-mobile";
 import { getCurrentCity } from "../../utils/city.js";
 
 const BMap = window.BMap;
@@ -48,7 +49,9 @@ export default class Map extends Component {
 
   // 添加覆盖物
   addOverlays = async (id) => {
+    Toast.loading("数据加载中...");
     const result = await this.axios.get(`/area/map?id=${id}`);
+    Toast.hide();
 
     result.data.body.forEach((item) => {
       const {
@@ -69,15 +72,50 @@ export default class Map extends Component {
 
       label.setStyle(labelStyle);
 
-      label.addEventListener('click', () => {
+      label.addEventListener("click", () => {
         setTimeout(() => {
           // 清空一级覆盖物
-          this.map.clearOverlays()
+          this.map.clearOverlays();
 
           // 重新设置中心点和缩放级别
-          this.map.centerAndZoom(point, 13)
-        }, 0)
-      })
+          this.map.centerAndZoom(point, 13);
+
+          // 请求二级覆盖物的数据
+          Toast.loading("数据加载中...");
+          this.axios.get(`/area/map?id=${value}`).then((res) => {
+            Toast.hide();
+
+            res.data.body.forEach((subItem) => {
+              const {
+                label: name1,
+                value: value1,
+                count: count1,
+                coord: { latitude: latitude1, longitude: longitude1 },
+              } = subItem;
+
+              var point1 = new BMap.Point(longitude1, latitude1);
+
+              var opts1 = {
+                position: point1, // 指定文本标注所在的地理位置
+                offset: new BMap.Size(30, -30), //设置文本偏移量
+              };
+
+              var label1 = new BMap.Label("", opts1); // 创建文本标注对象
+
+              label1.setStyle(labelStyle);
+
+              label1.setContent(`
+                <div class=${styles.bubble}>
+                  <p class=${styles.name}>${name1}</p>
+                  <p class=${styles.name}>${count1}</p>
+                </div>
+              `);
+
+              this.map.addOverlay(label1);
+            });
+          });
+        }, 0);
+      });
 
       label.setContent(`
       <div class=${styles.bubble}>
