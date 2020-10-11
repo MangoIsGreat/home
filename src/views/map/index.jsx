@@ -38,7 +38,7 @@ export default class Map extends Component {
           this.map.centerAndZoom(point, 11);
 
           // 添加覆盖物
-          this.addOverlays(this.id);
+          this.renderOverlays(this.id);
         } else {
           alert("您选择地址没有解析到结果!");
         }
@@ -47,13 +47,26 @@ export default class Map extends Component {
     );
   };
 
-  // 添加覆盖物
-  addOverlays = async (id) => {
-    Toast.loading("数据加载中...");
-    const result = await this.axios.get(`/area/map?id=${id}`);
-    Toast.hide();
+  getTypeAndNextZoom = () => {
+    let type = "circle";
+    let nextZoom = 13;
+    let zoom = this.map.getZoom();
 
-    result.data.body.forEach((item) => {
+    if (zoom >= 10 && zoom <= 12) {
+      type = "circle";
+      nextZoom = 13;
+    } else if (zoom >= 13 && zoom <= 14) {
+      type = "circle";
+      nextZoom = 15;
+    } else if (zoom > 14) {
+      type = "rect";
+    }
+
+    return { type, nextZoom };
+  };
+
+  renderCircleOverlay = (originData, nextZoom) => {
+    originData.data.body.forEach((item) => {
       const {
         label: name,
         value,
@@ -78,42 +91,9 @@ export default class Map extends Component {
           this.map.clearOverlays();
 
           // 重新设置中心点和缩放级别
-          this.map.centerAndZoom(point, 13);
+          this.map.centerAndZoom(point, nextZoom);
 
-          // 请求二级覆盖物的数据
-          Toast.loading("数据加载中...");
-          this.axios.get(`/area/map?id=${value}`).then((res) => {
-            Toast.hide();
-
-            res.data.body.forEach((subItem) => {
-              const {
-                label: name1,
-                value: value1,
-                count: count1,
-                coord: { latitude: latitude1, longitude: longitude1 },
-              } = subItem;
-
-              var point1 = new BMap.Point(longitude1, latitude1);
-
-              var opts1 = {
-                position: point1, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(30, -30), //设置文本偏移量
-              };
-
-              var label1 = new BMap.Label("", opts1); // 创建文本标注对象
-
-              label1.setStyle(labelStyle);
-
-              label1.setContent(`
-                <div class=${styles.bubble}>
-                  <p class=${styles.name}>${name1}</p>
-                  <p class=${styles.name}>${count1}</p>
-                </div>
-              `);
-
-              this.map.addOverlay(label1);
-            });
-          });
+          this.renderOverlays(value);
         }, 0);
       });
 
@@ -126,6 +106,23 @@ export default class Map extends Component {
 
       this.map.addOverlay(label);
     });
+  };
+
+  renderRectOverlay = () => {};
+
+  // 添加覆盖物
+  renderOverlays = async (id) => {
+    Toast.loading("数据加载中...");
+    const result = await this.axios.get(`/area/map?id=${id}`);
+    Toast.hide();
+
+    const { type, nextZoom } = this.getTypeAndNextZoom();
+
+    if (type === "circle") {
+      this.renderCircleOverlay(result, nextZoom);
+    } else {
+      this.renderRectOverlay();
+    }
   };
 
   render() {
