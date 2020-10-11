@@ -64,14 +64,28 @@ export default class Map extends Component {
         position: point, // 指定文本标注所在的地理位置
         offset: new BMap.Size(30, -30), //设置文本偏移量
       };
+
       var label = new BMap.Label("", opts); // 创建文本标注对象
+
       label.setStyle(labelStyle);
+
+      label.addEventListener('click', () => {
+        setTimeout(() => {
+          // 清空一级覆盖物
+          this.map.clearOverlays()
+
+          // 重新设置中心点和缩放级别
+          this.map.centerAndZoom(point, 13)
+        }, 0)
+      })
+
       label.setContent(`
       <div class=${styles.bubble}>
         <p class=${styles.name}>${name}</p>
         <p class=${styles.name}>${count}</p>
       </div>
     `);
+
       this.map.addOverlay(label);
     });
   };
