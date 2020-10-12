@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
+import HouseItem from "../../components/HouseItem";
 import { Toast } from "antd-mobile";
 import { getCurrentCity } from "../../utils/city.js";
 
@@ -19,12 +20,12 @@ const labelStyle = {
 
 export default class Map extends Component {
   constructor() {
-    super()
+    super();
 
-    this.state= {
+    this.state = {
       houseList: [], // 房屋列表
       isShow: false, // 是否显示房屋列表
-    }
+    };
   }
 
   async componentDidMount() {
@@ -37,11 +38,12 @@ export default class Map extends Component {
   initMap = (cityName) => {
     this.map = new BMap.Map("container");
 
-    this.map.addEventListener('touchstart', () => {
+    this.map.addEventListener("touchstart", () => {
       this.setState({
-        isShow: false
-      })
-    })
+        isShow: false,
+      });
+    });
+
     // 创建地址解析实例：
     var myGeo = new BMap.Geocoder();
 
@@ -151,20 +153,19 @@ export default class Map extends Component {
       </div>
     `);
 
-    label.addEventListener('click', e => {
-      if (e && e.changedTouches) {
-        const {clientX, clientY } = e.changedTouches[0]
-        const moveX = window.screen.width / 2 - clientX
-        const moveY = window.screen.height / 2 - clientY - 330 / 2
+      label.addEventListener("click", (e) => {
+        if (e && e.changedTouches) {
+          const { clientX, clientY } = e.changedTouches[0];
+          const moveX = window.screen.width / 2 - clientX;
+          const moveY = window.screen.height / 2 - clientY - 330 / 2;
 
-        // 滚动距离,让其在可视区域居中
-        this.map.panBy(moveX, moveY)
+          // 滚动距离,让其在可视区域居中
+          this.map.panBy(moveX, moveY);
 
-        this.setState({
-          isShow: true
-        })
-      }
-    })
+          // 根据小区的id去加载小区下面的房源列表数据
+          this.fetchHouseListData(value);
+        }
+      });
 
       this.map.addOverlay(label);
     });
@@ -185,17 +186,39 @@ export default class Map extends Component {
     }
   };
 
-  renderHouseList = () => {
-    return <div className={[styles.houseList, this.state.isShow ? styles.show : ''].join(" ")}>
-      <div className={styles.titleWrap}>
-        <h1 className={styles.listTitle}>房屋列表</h1>
-        <a className={styles.titleMore} href="/layout/houseList">更多房源</a>
-      </div>
-      <div className={styles.houseItems}>
+  fetchHouseListData = async (id) => {
+    Toast.loading("数据加载中...", 0);
+    const result = await this.axios.get(`/houses?cityId=${id}`);
+    Toast.hide();
 
+    this.setState({
+      isShow: true,
+      houseList: result.data.body.list,
+    });
+  };
+
+  renderHouseList = () => {
+    return (
+      <div
+        className={[
+          styles.houseList,
+          this.state.isShow ? styles.show : "",
+        ].join(" ")}
+      >
+        <div className={styles.titleWrap}>
+          <h1 className={styles.listTitle}>房屋列表</h1>
+          <a className={styles.titleMore} href="/layout/houseList">
+            更多房源
+          </a>
+        </div>
+        <div className={styles.houseItems}>
+          {this.state.houseList.map((item) => {
+            return <HouseItem key={item.houseCode} {...item} />;
+          })}
+        </div>
       </div>
-    </div>
-  }
+    );
+  };
 
   render() {
     return (
@@ -203,7 +226,7 @@ export default class Map extends Component {
         <MyNavBar title="地图找房" />
         <div id="container"></div>
         {/* 房屋列表 */}
-        { this.renderHouseList() }
+        {this.renderHouseList()}
       </div>
     );
   }
