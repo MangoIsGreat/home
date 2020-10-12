@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "../home";
-import HomeList from "../homeList";
+import houseList from "../houseList";
 import News from "../news";
 import My from "../my";
 import NotFound from "../NotFound";
@@ -73,7 +73,7 @@ export default class Layout extends Component {
         <div>
           <Switch>
             <Route path="/layout/index" component={Home} />
-            <Route path="/layout/homeList" component={HomeList} />
+            <Route path="/layout/houselist" component={houseList} />
             <Route path="/layout/news" component={News} />
             <Route path="/layout/my" component={My} />
             <Redirect exact from="/layout" to="/layout/index" />

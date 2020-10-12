@@ -4,9 +4,9 @@ import { Flex } from "antd-mobile";
 import { withRouter } from "react-router-dom";
 import styles from "./index.module.scss";
 
-function SearchBar({ cityName, history }) {
+function SearchBar({ cityName, history, className }) {
   return (
-    <Flex className={styles.root}>
+    <Flex className={[styles.root, className].join(" ")}>
       <Flex className={styles.searchLeft}>
         <div
           onClick={() => {
