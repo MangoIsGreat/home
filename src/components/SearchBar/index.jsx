@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import { Flex } from "antd-mobile";
 import { withRouter } from "react-router-dom";
 import styles from "./index.module.scss";
+import classNames from "classnames"
 
 function SearchBar({ cityName, history, className }) {
   return (
-    <Flex className={[styles.root, className].join(" ")}>
+    <Flex className={classNames(styles.root, className)}>
       <Flex className={styles.searchLeft}>
         <div
           onClick={() => {
