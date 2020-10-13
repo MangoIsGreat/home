@@ -1,10 +1,13 @@
-const initState = {};
+const initState = {
+  count: 0,
+};
 
 export default (state = initState, action) => {
   switch (action.type) {
     case "ADD":
-      break;
+      state.count = state.count + action.payload;
+      return state;
     default:
-      break;
+      return state;
   }
 };
