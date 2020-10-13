@@ -1,8 +1,14 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 
 // 导入根Reducer
 import rootReducer from "./reducers";
 
-const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// 使用了中间件时,还想在Google浏览器中看到数据
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk, composeEnhancers(applyMiddleware(thunk)))
+);
 
 export default store;
