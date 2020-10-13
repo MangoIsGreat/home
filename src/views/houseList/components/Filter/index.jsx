@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 class Filter extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    //   触发异步的action,然后在异步的action中请求数据
+    this.props.asyncSetFilterData();
+  }
 
   render() {
     return <div></div>;
@@ -17,8 +20,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCount: function (count) {
-      dispatch({ type: "ADD", payload: count });
+    asyncSetFilterData: function () {
+      // 触发异步的action
+      dispatch();
     },
   };
 };
