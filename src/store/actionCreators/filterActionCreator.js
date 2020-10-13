@@ -10,3 +10,7 @@ export const setFilterData = (data) => {
     payload: data,
   };
 };
+
+export const asyncSetFilterData = () => {
+  console.log("asyncSetFilterData");
+};

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as filterActionCreator from "../../../../store/actionCreators/filterActionCreator";
 
 class Filter extends Component {
   componentDidMount() {
@@ -19,12 +21,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    asyncSetFilterData: function () {
-      // 触发异步的action
-      dispatch();
-    },
-  };
+  return bindActionCreators(filterActionCreator, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
