@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { PickerView } from "antd-mobile";
+import FilterFooter from "../FilterFooter";
 
 class FilterPicker extends Component {
   render() {
@@ -29,6 +30,7 @@ class FilterPicker extends Component {
     return (
       <div>
         <PickerView cols={cols} data={data} />
+        <FilterFooter />
       </div>
     );
   }
