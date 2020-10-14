@@ -3,6 +3,7 @@ import { Flex } from "antd-mobile";
 import styles from "./index.module.scss";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import classNames from "classnames";
 import * as filterActionCreator from "../../../../store/actionCreators/filterActionCreator";
 // import { setOpenType } from "../../../../store/actionCreators/filterActionCreator";
 
@@ -18,9 +19,13 @@ class FilterTitle extends Component {
     return (
       <Flex className={styles.root}>
         {types.map((item) => {
+          const isSelect = this.props.selectTitleValue[item.type];
+
           return (
             <Flex.Item
-              className={styles.dropdown}
+              className={classNames(styles.dropdown, {
+                [styles.selected]: isSelect,
+              })}
               key={item.type}
               onClick={() => {
                 this.props.setOpenType(item.type);
@@ -37,6 +42,10 @@ class FilterTitle extends Component {
   }
 }
 
+const mapStateToProps = ({ filters: { selectTitleValue } }) => {
+  return { selectTitleValue };
+};
+
 const mapDispatchToProps = (dispatch) => {
   // 批量注册的方式:
   return bindActionCreators(filterActionCreator, dispatch);
@@ -49,4 +58,4 @@ const mapDispatchToProps = (dispatch) => {
   //   };
 };
 
-export default connect(null, mapDispatchToProps)(FilterTitle);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterTitle);
