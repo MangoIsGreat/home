@@ -1,9 +1,36 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { PickerView } from "antd-mobile";
 
 class FilterPicker extends Component {
   render() {
-    return <div>FilterPicker</div>;
+    const { openType, area, subway, rentType, price } = this.props;
+    let data = null;
+    let cols = 3;
+    switch (openType) {
+      case "area":
+        data = [area, subway];
+        break;
+
+      case "mode":
+        cols = 1;
+        data = rentType;
+        break;
+
+      case "price":
+        cols = 1;
+        data = price;
+        break;
+
+      default:
+        break;
+    }
+
+    return (
+      <div>
+        <PickerView cols={cols} data={data} />
+      </div>
+    );
   }
 }
 
