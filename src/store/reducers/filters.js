@@ -2,6 +2,7 @@ import {
   SET_FILTER_DATA,
   SET_OPEN_TYPE,
   SET_SELECT_TITLE_VALUE,
+  SET_VALUE,
 } from "../actionTypes/filterActionType";
 
 const initState = {
@@ -12,6 +13,12 @@ const initState = {
     mode: false, // 方式
     price: false, // 租金
     more: false, // 筛选
+  },
+  selectValue: {
+    area: ["area", "null"], // 区域
+    mode: ["null"], // 方式
+    price: ["null"], // 租金
+    more: [], // 筛选
   },
 };
 
@@ -32,6 +39,10 @@ export default (state = initState, action) => {
         ...action.payload,
       };
       return newState3;
+    case SET_VALUE:
+      const newState4 = JSON.parse(JSON.stringify(state));
+      newState4.selectValue = { ...newState4.selectValue, ...action.payload };
+      return newState4;
     default:
       return state;
   }

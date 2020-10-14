@@ -2,6 +2,7 @@ import {
   SET_FILTER_DATA,
   SET_OPEN_TYPE,
   SET_SELECT_TITLE_VALUE,
+  SET_VALUE,
 } from "../actionTypes/filterActionType";
 import { axios } from "../../utils/axios";
 import { getCurrentCity } from "../../utils/city";
@@ -25,6 +26,18 @@ export const setFilterData = (data) => {
 export const setOpenType = (data) => {
   return {
     type: SET_OPEN_TYPE,
+    payload: data,
+  };
+};
+
+/**
+ * 同步的action
+ * @param {*} data 
+ * 直接返回对象,是同步的
+ */
+export const setValue = (data) => {
+  return {
+    type: SET_VALUE,
     payload: data,
   };
 };
