@@ -35,7 +35,7 @@ class Filter extends Component {
         {/* 遮罩层 */}
         {this.renderMask()}
         {/* 内容区域 */}
-        <div class={styles.content}>
+        <div className={styles.content}>
           <FilterTitle />
           {(openType === "area" ||
             openType === "mode" ||
