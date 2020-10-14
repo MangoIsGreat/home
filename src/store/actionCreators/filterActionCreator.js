@@ -1,4 +1,8 @@
-import { SET_FILTER_DATA } from "../actionTypes/filterActionType";
+import {
+  SET_FILTER_DATA,
+  SET_OPEN_TYPE,
+  SET_SELECT_TITLE_VALUE,
+} from "../actionTypes/filterActionType";
 import { axios } from "../../utils/axios";
 import { getCurrentCity } from "../../utils/city";
 
@@ -9,6 +13,30 @@ import { getCurrentCity } from "../../utils/city";
 export const setFilterData = (data) => {
   return {
     type: SET_FILTER_DATA,
+    payload: data,
+  };
+};
+
+/**
+ * 同步的action
+ * @param {*} data 'area' 'more' 'price' 'mode'
+ * 直接返回对象,是同步的
+ */
+export const setOpenType = (data) => {
+  return {
+    type: SET_OPEN_TYPE,
+    payload: data,
+  };
+};
+
+/**
+ * 同步的action
+ * @param {*} data
+ * 直接返回对象,是同步的
+ */
+export const setSelectTitleValue = (data) => {
+  return {
+    type: SET_SELECT_TITLE_VALUE,
     payload: data,
   };
 };

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Flex } from "antd-mobile";
 import SearchBar from "../../components/SearchBar";
 import { getCurrentCity } from "../../utils/city";
+import Filter from "./components/Filter";
 
 import styles from "./index.module.scss";
 
@@ -31,6 +32,7 @@ export default class houseList extends Component {
             className={styles.mySearchBar}
           />
         </Flex>
+        <Filter />
       </div>
     );
   }
