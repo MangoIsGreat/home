@@ -10,8 +10,20 @@ class FilterPicker extends Component {
     super();
 
     this.state = {
+      openType: props.openType, // 第一次时候的openType
       value: props.selectValue[props.openType],
     };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.openType !== state.openType) {
+      return {
+        openType: props.openType,
+        value: props.selectValue[props.openType],
+      };
+    } else {
+      return state;
+    }
   }
 
   changeValue = (data) => {
