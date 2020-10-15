@@ -8,7 +8,7 @@ import classNames from "classnames";
 
 class FilterMore extends Component {
   state = {
-    selectedValues: [],
+    selectedValues: this.props.more,
   };
 
   toggleSelect = (value) => {
@@ -32,7 +32,11 @@ class FilterMore extends Component {
           return (
             <span
               onClick={() => this.toggleSelect(item.value)}
-              className={classNames(styles.tag, {[styles.tagActive]: this.state.selectedValues.includes(item.value)})}
+              className={classNames(styles.tag, {
+                [styles.tagActive]: this.state.selectedValues.includes(
+                  item.value
+                ),
+              })}
               key={item.value}
             >
               {item.label}
@@ -67,9 +71,14 @@ class FilterMore extends Component {
         </div>
         <div className={styles.footer}>
           <FilterFooter
-            cancelText="清楚"
-            okClick={() => console.log(11111)}
-            cancelClick={() => console.log(22222)}
+            cancelText="清除"
+            okClick={() => {
+              this.props.setValue({ more: this.state.selectedValues });
+              this.props.setOpenType("");
+            }}
+            cancelClick={() => {
+              this.setState({ selectedValues: [] });
+            }}
           />
         </div>
       </div>
@@ -80,6 +89,7 @@ class FilterMore extends Component {
 const mapStateToProps = ({
   filters: {
     filterData: { roomType, oriented, floor, characteristic },
+    selectValue: { more },
   },
 }) => {
   return {
@@ -87,6 +97,7 @@ const mapStateToProps = ({
     oriented,
     floor,
     characteristic,
+    more,
   };
 };
 
