@@ -4,14 +4,37 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as filterActionCreator from "../../../../store/actionCreators/filterActionCreator";
 import FilterFooter from "../FilterFooter";
+import classNames from "classnames";
 
 class FilterMore extends Component {
+  state = {
+    selectedValues: [],
+  };
+
+  toggleSelect = (value) => {
+    let oldValues = this.state.selectedValues;
+
+    if (oldValues.includes(value)) {
+      oldValues = oldValues.filter((val) => val !== value);
+    } else {
+      oldValues.push(value);
+    }
+
+    this.setState({
+      selectedValues: oldValues,
+    });
+  };
+
   renderItems = (data) => {
     return (
       <dd className={styles.dd}>
         {data.map((item) => {
           return (
-            <span className={styles.tag} key={item.value}>
+            <span
+              onClick={() => this.toggleSelect(item.value)}
+              className={classNames(styles.tag, {[styles.tagActive]: this.state.selectedValues.includes(item.value)})}
+              key={item.value}
+            >
               {item.label}
             </span>
           );
