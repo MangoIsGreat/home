@@ -5,6 +5,7 @@ import * as filterActionCreator from "../../../../store/actionCreators/filterAct
 import FilterTitle from "../FilterTitle";
 import FilterPicker from "../FilterPicker";
 import FilterMore from "../FilterMore";
+import { Spring } from "react-spring/renderprops";
 
 import styles from "./index.module.scss";
 
@@ -17,13 +18,26 @@ class Filter extends Component {
   renderMask() {
     const openType = this.props.openType;
 
-    if (openType === "") return null;
+    // if (openType === "") return null;
+    const isShow =
+      openType === "area" || openType === "mode" || openType === "price";
 
     return (
-      <div
-        onClick={() => this.props.setOpenType("")}
-        className={styles.mask}
-      ></div>
+      <Spring to={{ opacity: isShow ? 1 : 0 }} config={{duration: 250}}>
+        {(props) => {
+          if (props.opacity === 0) {
+            return null;
+          } else {
+            return (
+              <div
+                style={props}
+                onClick={() => this.props.setOpenType("")}
+                className={styles.mask}
+              ></div>
+            );
+          }
+        }}
+      </Spring>
     );
   }
 
@@ -40,9 +54,7 @@ class Filter extends Component {
           {(openType === "area" ||
             openType === "mode" ||
             openType === "price") && <FilterPicker />}
-            {
-              openType === "more" && <FilterMore />
-            }
+          {openType === "more" && <FilterMore />}
         </div>
       </div>
     );
