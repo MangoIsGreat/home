@@ -2,9 +2,9 @@ import React from "react";
 import styles from "./index.module.scss";
 import { BASE_URL } from "../../utils/url.js";
 
-function HouseItem({ houseImg, title, tags, price, desc, houseCode }) {
+function HouseItem({ houseImg, title, tags, price, desc, houseCode, style }) {
   return (
-    <div className={styles.house} key={houseCode}>
+    <div style={style} className={styles.house} key={houseCode}>
       <div className={styles.imgWrap}>
         <img className={styles.img} src={`${BASE_URL}${houseImg}`} alt="" />
       </div>
