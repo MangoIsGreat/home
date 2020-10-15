@@ -6,11 +6,11 @@ import { bindActionCreators } from "redux";
 import * as filterActionCreator from "../../../../store/actionCreators/filterActionCreator";
 
 class FilterPicker extends Component {
-  constructor() {
+  constructor(props) {
     super();
 
     this.state = {
-      value: [],
+      value: props.selectValue[props.openType],
     };
   }
 
@@ -68,6 +68,7 @@ class FilterPicker extends Component {
 const mapStateToProps = ({
   filters: {
     openType,
+    selectValue,
     filterData: { area, subway, rentType, price },
   },
 }) => {
@@ -78,6 +79,7 @@ const mapStateToProps = ({
     subway,
     rentType,
     price,
+    selectValue,
   };
 };
 
