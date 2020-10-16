@@ -73,8 +73,8 @@ class FilterMore extends Component {
           <FilterFooter
             cancelText="清除"
             okClick={() => {
-              this.props.setValue({ more: this.state.selectedValues });
               this.props.setOpenType("");
+              this.props.setValue({ more: this.state.selectedValues });
             }}
             cancelClick={() => {
               this.setState({ selectedValues: [] });

@@ -68,8 +68,8 @@ class FilterPicker extends Component {
             this.props.setOpenType("");
           }}
           okClick={() => {
-            this.props.setValue({ [this.props.openType]: this.state.value });
             this.props.setOpenType("");
+            this.props.setValue({ [this.props.openType]: this.state.value });
           }}
         />
       </div>

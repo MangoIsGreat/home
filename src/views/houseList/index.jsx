@@ -38,6 +38,8 @@ class houseList extends Component {
   }
 
   componentWillReceiveProps(props) {
+    if (!props.isCanSearch) return;
+
     // 只有再点击确定的时候才执行getHouseListData
     this.getHouseListData();
   }
@@ -119,7 +121,7 @@ class houseList extends Component {
 const mapStateToProps = ({
   filters: {
     selectValue: { area, mode, price, more },
-    openType,
+    isCanSearch,
   },
 }) => {
   return {
@@ -127,7 +129,7 @@ const mapStateToProps = ({
     mode,
     price,
     more,
-    openType,
+    isCanSearch,
   };
 };
 
