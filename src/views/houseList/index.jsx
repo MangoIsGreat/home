@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { Flex, Toast } from "antd-mobile";
 import SearchBar from "../../components/SearchBar";
 import { getCurrentCity } from "../../utils/city";
-import { AutoSizer, List } from "react-virtualized";
+import {
+  AutoSizer,
+  List,
+  WindowScroller,
+  InfiniteLoader,
+} from "react-virtualized";
 import Filter from "./components/Filter";
 import HouseItem from "../../components/HouseItem";
 import { connect } from "react-redux";
@@ -47,21 +52,29 @@ class houseList extends Component {
 
       this.filters[key] =
         props.area[2] === "null" ? props.area[1] : props.area[2];
+    } else {
+      this.filters.area = null;
     }
 
     // 处理mode:
     if (props.mode[0] !== "null") {
       this.filters.rentType = props.mode[0];
+    } else {
+      this.filters.rentType = null;
     }
 
     // 处理price:
     if (props.price[0] !== "null") {
       this.filters.price = props.mode[0];
+    } else {
+      this.filters.price = null;
     }
 
     // 处理more:
     if (props.more.length > 0) {
       this.filters.more = props.more.join(",");
+    } else {
+      this.filters.more = null;
     }
 
     // 只有再点击确定的时候才执行getHouseListData
@@ -95,7 +108,7 @@ class houseList extends Component {
 
     if (!item) {
       return (
-        <div style={style}>
+        <div key={index} style={style}>
           <p className={styles.loading}></p>
         </div>
       );
@@ -104,22 +117,74 @@ class houseList extends Component {
     return <HouseItem key={key} style={style} {...item} />;
   };
 
+  // 判断这一行是否加载完毕:
+  isRowLoaded = ({ index }) => {
+    return !!this.state.list[index];
+  };
+
+  loadMoreRows = ({ startIndex, stopIndex }) => {
+    return new Promise(async (resolve, reject) => {
+      Toast.loading("数据加载中...", 0);
+
+      const result = await this.axios.get("/houses", {
+        params: {
+          ...this.filters,
+          cityId: this.id,
+          start: 1 + startIndex,
+          end: 1 + stopIndex,
+        },
+      });
+
+      Toast.hide();
+
+      if (result.data.status === 200) {
+        this.setState(
+          {
+            list: { ...this.state.list, ...result.data.body.list },
+            count: result.data.body.count,
+          },
+          () => {
+            // 这里代表网络请求发送完毕了,可以渲染数据了
+            resolve();
+          }
+        );
+      }
+    });
+  };
+
   renderHouseList = () => {
     const { count } = this.state;
 
     return (
       <div className={styles.houseList}>
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              height={height}
-              rowCount={count}
-              rowHeight={120}
-              rowRenderer={this.rowRenderer}
-              width={width}
-            />
+        <InfiniteLoader
+          isRowLoaded={this.isRowLoaded}
+          loadMoreRows={this.loadMoreRows}
+          rowCount={count}
+        >
+          {({ onRowsRendered, registerChild }) => (
+            <WindowScroller>
+              {({ height, isScrolling, scrollTop }) => (
+                <AutoSizer>
+                  {({ width }) => (
+                    <List
+                      autoHeight
+                      isScrolling={isScrolling}
+                      scrollTop={scrollTop}
+                      height={height}
+                      rowCount={count}
+                      rowHeight={120}
+                      rowRenderer={this.rowRenderer}
+                      width={width}
+                      onRowsRendered={onRowsRendered}
+                      ref={registerChild}
+                    />
+                  )}
+                </AutoSizer>
+              )}
+            </WindowScroller>
           )}
-        </AutoSizer>
+        </InfiniteLoader>
       </div>
     );
   };
