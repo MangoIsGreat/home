@@ -5,10 +5,11 @@ import { getCurrentCity } from "../../utils/city";
 import { AutoSizer, List } from "react-virtualized";
 import Filter from "./components/Filter";
 import HouseItem from "../../components/HouseItem";
+import { connect } from "react-redux";
 
 import styles from "./index.module.scss";
 
-export default class houseList extends Component {
+class houseList extends Component {
   constructor() {
     super();
 
@@ -33,6 +34,11 @@ export default class houseList extends Component {
     });
 
     // 调用获取房源列表数据的方法
+    this.getHouseListData();
+  }
+
+  componentWillReceiveProps(props) {
+    // 只有再点击确定的时候才执行getHouseListData
     this.getHouseListData();
   }
 
@@ -109,3 +115,20 @@ export default class houseList extends Component {
     );
   }
 }
+
+const mapStateToProps = ({
+  filters: {
+    selectValue: { area, mode, price, more },
+    openType,
+  },
+}) => {
+  return {
+    area,
+    mode,
+    price,
+    more,
+    openType,
+  };
+};
+
+export default connect(mapStateToProps, null)(houseList);
