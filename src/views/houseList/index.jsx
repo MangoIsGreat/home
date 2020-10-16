@@ -40,6 +40,30 @@ class houseList extends Component {
   componentWillReceiveProps(props) {
     if (!props.isCanSearch) return;
 
+    // 处理数据:
+    // 处理area:
+    if (props.area.length > 2) {
+      const key = props.area[0];
+
+      this.filters[key] =
+        props.area[2] === "null" ? props.area[1] : props.area[2];
+    }
+
+    // 处理mode:
+    if (props.mode[0] !== "null") {
+      this.filters.rentType = props.mode[0];
+    }
+
+    // 处理price:
+    if (props.price[0] !== "null") {
+      this.filters.price = props.mode[0];
+    }
+
+    // 处理more:
+    if (props.more.length > 0) {
+      this.filters.more = props.more.join(",");
+    }
+
     // 只有再点击确定的时候才执行getHouseListData
     this.getHouseListData();
   }
