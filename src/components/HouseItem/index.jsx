@@ -1,10 +1,27 @@
 import React from "react";
 import styles from "./index.module.scss";
 import { BASE_URL } from "../../utils/url.js";
+import { withRouter } from "react-router-dom";
 
-function HouseItem({ houseImg, title, tags, price, desc, houseCode, style }) {
+function HouseItem({
+  houseImg,
+  title,
+  tags,
+  price,
+  desc,
+  houseCode,
+  style,
+  history,
+}) {
   return (
-    <div style={style} className={styles.house} key={houseCode}>
+    <div
+      onClick={() => {
+        history.push(`/detail/${houseCode}`);
+      }}
+      style={style}
+      className={styles.house}
+      key={houseCode}
+    >
       <div className={styles.imgWrap}>
         <img className={styles.img} src={`${BASE_URL}${houseImg}`} alt="" />
       </div>
@@ -34,4 +51,4 @@ function HouseItem({ houseImg, title, tags, price, desc, houseCode, style }) {
   );
 }
 
-export default HouseItem;
+export default withRouter(HouseItem);

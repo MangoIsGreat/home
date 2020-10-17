@@ -15,7 +15,7 @@ export default class Sticky extends Component {
     // 判断 placeholderDom 距离顶部的距离
     const { top } = placeholderDom.getBoundingClientRect();
 
-    if (top < 0) {
+    if (top <= 0) {
       placeholderDom.style.height = "40px";
       contentDom.classList.add(styles.fixed);
     } else {
