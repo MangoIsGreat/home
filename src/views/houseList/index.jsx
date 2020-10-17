@@ -9,6 +9,7 @@ import {
   InfiniteLoader,
 } from "react-virtualized";
 import Filter from "./components/Filter";
+import Sticky from "../../components/Sticky";
 import HouseItem from "../../components/HouseItem";
 import { connect } from "react-redux";
 
@@ -199,7 +200,9 @@ class houseList extends Component {
             className={styles.mySearchBar}
           />
         </Flex>
-        <Filter />
+        <Sticky>
+          <Filter />
+        </Sticky>
         {/* 渲染房源列表 */}
         {this.state.list && this.renderHouseList()}
       </div>
