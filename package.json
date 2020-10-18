@@ -11,6 +11,7 @@
     "babel-plugin-import": "^1.13.0",
     "classnames": "^2.2.6",
     "customize-cra": "^1.0.0",
+    "formik": "^2.2.0",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -23,7 +24,8 @@
     "react-virtualized": "^9.22.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "sass-loader": "^10.0.2"
+    "sass-loader": "^10.0.2",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-app-rewired start",
