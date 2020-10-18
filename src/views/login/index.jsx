@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MyNavBar from "../../components/MyNavBar";
-import { WhiteSpace, WingBlank } from "antd-mobile";
+import { WhiteSpace, WingBlank, Flex } from "antd-mobile";
 
 import styles from "./index.module.scss";
 
@@ -30,6 +30,11 @@ export default class Login extends Component {
               <input className={styles.submit} value="登录" type="submit" />
             </div>
           </form>
+          <Flex className={styles.backHome}>
+              <Flex.Item>
+                  <a href="#/">还没有账号，去注册~</a>
+              </Flex.Item>
+          </Flex>
         </WingBlank>
       </div>
     );
