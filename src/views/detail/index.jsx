@@ -3,8 +3,9 @@ import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
 import HouseMatch from "../../components/HouseMatch";
 import HouseItem from "../../components/HouseItem";
-import { Carousel, Flex } from "antd-mobile";
+import { Carousel, Flex, Modal } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
+import { isLogin } from "../../utils/token";
 
 const BMapGL = window.BMapGL;
 const labelStyle = {
@@ -60,7 +61,7 @@ export default class Detail extends Component {
     this.state = {
       detail: {},
       imgHeight: 252,
-      isFavorite: false //是否收藏
+      isFavorite: false, //是否收藏
     };
   }
 
@@ -264,7 +265,7 @@ export default class Detail extends Component {
    * 渲染底部
    */
   renderFooter = () => {
-    const { isFavorite } = this.state
+    const { isFavorite } = this.state;
     return (
       <Flex className={styles.fixedBottom}>
         <Flex.Item onClick={this.favoriteOrNot}>
@@ -278,7 +279,7 @@ export default class Detail extends Component {
             alt=""
           />
           <span className={styles.favorite}>
-            {isFavorite ? '已收藏' : '收藏'}
+            {isFavorite ? "已收藏" : "收藏"}
           </span>
         </Flex.Item>
         <Flex.Item>在线咨询</Flex.Item>
@@ -288,8 +289,8 @@ export default class Detail extends Component {
           </a>
         </Flex.Item>
       </Flex>
-    )
-  }
+    );
+  };
 
   initMap = () => {
     const {
@@ -313,6 +314,18 @@ export default class Detail extends Component {
     </div>`);
     label.setStyle(labelStyle);
     map.addOverlay(label); // 将标注添加到地图中
+  };
+
+  favoriteOrNot = () => {
+    // 判断是否登录，没有登录，则弹出模态框
+    if (!isLogin()) {
+      Modal.alert("提示", "登录后才能收藏房源，是否去登录？", [
+        { text: "取消", onPress: null },
+        { text: "去登录", onPress: () => this.props.history.push("/login") },
+      ]);
+
+      return;
+    }
   };
 
   render() {
