@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
 import HouseMatch from "../../components/HouseMatch";
+import HouseItem from "../../components/HouseItem";
 import { Carousel, Flex } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 
@@ -21,6 +22,37 @@ const labelStyle = {
   userSelect: "none",
 };
 
+// 猜你喜欢
+const recommendHouses = [
+  {
+    id: 1,
+    houseCode: "5cc477061439630e5b467b0b",
+    houseImg: "/newImg/7bk83o0cf.jpg",
+    desc: "72.32㎡/南 北/低楼层",
+    title: "安贞西里 3室1厅",
+    price: 4500,
+    tags: ["随时看房"],
+  },
+  {
+    id: 2,
+    houseCode: "5cc4a1dd1439630e5b502266",
+    houseImg: "/newImg/7bk83o0cf.jpg",
+    desc: "83㎡/南/高楼层",
+    title: "天居园 2室1厅",
+    price: 7200,
+    tags: ["近地铁"],
+  },
+  {
+    id: 3,
+    houseCode: "5cc46a921439630e5b439611",
+    houseImg: "/newImg/7bk83o0cf.jpg",
+    desc: "52㎡/西南/低楼层",
+    title: "角门甲4号院 1室1厅",
+    price: 4300,
+    tags: ["集中供暖"],
+  },
+];
+
 export default class Detail extends Component {
   constructor() {
     super();
@@ -28,6 +60,7 @@ export default class Detail extends Component {
     this.state = {
       detail: {},
       imgHeight: 252,
+      isFavorite: false //是否收藏
     };
   }
 
@@ -181,6 +214,83 @@ export default class Detail extends Component {
     );
   };
 
+  /** 渲染房屋配套 */
+  renderDescription() {
+    return (
+      <div className={styles.set}>
+        <div className={styles.houseTitle}>房源概况</div>
+        <div>
+          <div className={styles.contact}>
+            <div className={styles.user}>
+              <img src="http://huangjiangjun.top:8088/img/avatar.png" />
+              <div className={styles.useInfo}>
+                <div>王女士</div>
+                <div className={styles.userAuth}>
+                  <i className="iconfont icon-auth"></i>
+                  已认证房主
+                </div>
+              </div>
+            </div>
+            <span className={styles.userMsg}>发消息</span>
+          </div>
+          <div className={styles.descText}>
+            【房源亮点】
+            离小区200米就是家家乐超市，504米就是花莲超市，05公里莲塘一中，1.3公里就到维也纳购物广场。
+            【交通出行】 出小区234米就是万坊桥头公交站：515路
+            429米星港湾花园（新连武路口）公交站：127路；128路；河溪线；128路箭江闸线
+            【小区介绍】
+            小区建于2001年，70年产权商品房，客厅朝南通阳台，配套设施齐，交通便利。
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 渲染猜你喜欢
+  renderRecommendHouses = () => {
+    return (
+      <div className={styles.recommend}>
+        <div className={styles.houseTitle}>猜你喜欢</div>
+        <div className={styles.items}>
+          {recommendHouses.map((item) => {
+            return <HouseItem key={item.houseCode} {...item} />;
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  /**
+   * 渲染底部
+   */
+  renderFooter = () => {
+    const { isFavorite } = this.state
+    return (
+      <Flex className={styles.fixedBottom}>
+        <Flex.Item onClick={this.favoriteOrNot}>
+          <img
+            className={styles.favoriteImg}
+            src={
+              isFavorite
+                ? `${BASE_URL}/img/star.png`
+                : `${BASE_URL}/img/unstar.png`
+            }
+            alt=""
+          />
+          <span className={styles.favorite}>
+            {isFavorite ? '已收藏' : '收藏'}
+          </span>
+        </Flex.Item>
+        <Flex.Item>在线咨询</Flex.Item>
+        <Flex.Item>
+          <a href="tel:400-618-4000" className={styles.telephone}>
+            电话预约
+          </a>
+        </Flex.Item>
+      </Flex>
+    )
+  }
+
   initMap = () => {
     const {
       community,
@@ -231,6 +341,15 @@ export default class Detail extends Component {
 
         {/* 渲染房屋配套 */}
         {supporting && this.renderSupporting()}
+
+        {/* 渲染房屋概况 */}
+        {this.renderDescription()}
+
+        {/* 渲染猜你喜欢 */}
+        {this.renderRecommendHouses()}
+
+        {/* 渲染底部 */}
+        {this.renderFooter()}
       </div>
     );
   }
