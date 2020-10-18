@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
+import HouseMatch from "../../components/HouseMatch";
 import { Carousel, Flex } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 
@@ -162,6 +163,24 @@ export default class Detail extends Component {
     );
   };
 
+  // 渲染房屋配套
+  renderSupporting = () => {
+    const {
+      detail: { supporting },
+    } = this.state;
+
+    return (
+      <div className={styles.about}>
+        <div className={styles.houseTitle}>房屋配套</div>
+        {supporting.length === 0 ? (
+          <div>房屋配套</div>
+        ) : (
+          <HouseMatch data={supporting} />
+        )}
+      </div>
+    );
+  };
+
   initMap = () => {
     const {
       community,
@@ -187,25 +206,31 @@ export default class Detail extends Component {
   };
 
   render() {
-    const { detail } = this.state;
+    const {
+      detail: { supporting, community, houseImg },
+    } = this.state;
+
     return (
       <div className={styles.root}>
-        {detail.community && (
+        {community && (
           <MyNavBar
-            title={detail.community}
+            title={community}
             rightContent={[<i key="0" className="iconfont icon-share" />]}
             className={styles.detailHeader}
           />
         )}
 
         {/* 渲染轮播图 */}
-        {detail.houseImg && this.renderSwiper()}
+        {houseImg && this.renderSwiper()}
 
         {/* 渲染房屋信息 */}
         {this.renderHouseInfo()}
 
         {/* 渲染小区和地图 */}
         {this.renderMap()}
+
+        {/* 渲染房屋配套 */}
+        {supporting && this.renderSupporting()}
       </div>
     );
   }
