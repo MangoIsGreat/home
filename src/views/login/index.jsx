@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import MyNavBar from "../../components/MyNavBar";
 import { WhiteSpace, WingBlank, Flex, Toast } from "antd-mobile";
 import { setToken } from "../../utils/token";
-import { Field, Form, withFormik } from "formik";
+import { Field, Form, withFormik, ErrorMessage } from "formik";
 import { axios } from "../../utils/axios";
+import * as Yup from "yup";
 
 import styles from "./index.module.scss";
 
@@ -23,6 +24,11 @@ class Login extends Component {
                 type="text"
               />
             </div>
+            <ErrorMessage
+              component="div"
+              className={styles.error}
+              name="username"
+            />
             <div className={styles.formItem}>
               <Field
                 name="password"
@@ -31,6 +37,11 @@ class Login extends Component {
                 type="text"
               />
             </div>
+            <ErrorMessage
+              component="div"
+              className={styles.error}
+              name="password"
+            />
             <div className={styles.formSubmit}>
               <input className={styles.submit} value="登录" type="submit" />
             </div>
@@ -46,8 +57,19 @@ class Login extends Component {
   }
 }
 
+const USERNAMEREG = /^[a-zA-Z_0-9]{5,8}$/;
+const PASSWORDREG = /^[a-zA-Z_0-9]{5,12}$/;
+
 export default withFormik({
   mapPropsToValues: () => ({ username: "", password: "" }),
+  validationSchema: Yup.object().shape({
+    username: Yup.string()
+      .matches(USERNAMEREG, "用户名必须是5-8位")
+      .required("账号为必填项"),
+    password: Yup.string()
+      .matches(PASSWORDREG, "用户名必须是5-12位")
+      .required("账号为必填项"),
+  }),
   handleSubmit: async (values, { props }) => {
     const result = await axios.post("/user/login", values);
 
