@@ -34,7 +34,7 @@ class Login extends Component {
                 name="password"
                 className={styles.input}
                 placeholder="请输入密码"
-                type="text"
+                type="password"
               />
             </div>
             <ErrorMessage
@@ -61,7 +61,7 @@ const USERNAMEREG = /^[a-zA-Z_0-9]{5,8}$/;
 const PASSWORDREG = /^[a-zA-Z_0-9]{5,12}$/;
 
 export default withFormik({
-  mapPropsToValues: () => ({ username: "", password: "" }),
+  mapPropsToValues: () => ({ username: "test2", password: "test2" }),
   validationSchema: Yup.object().shape({
     username: Yup.string()
       .matches(USERNAMEREG, "用户名必须是5-8位")

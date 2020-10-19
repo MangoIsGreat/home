@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Grid, Modal } from "antd-mobile";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../../utils/url";
+import { removeToken } from "../../utils/token";
 
 import styles from "./index.module.scss";
 
@@ -52,6 +53,9 @@ export default class My extends Component {
           const result = await this.axios.post("/user/logout");
 
           if (result.data.status === 200) {
+            // 清除本地token
+            removeToken();
+            
             this.setState({
               avatar: "/img/profile/avatar.png",
               nickname: "游客",
