@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Button, Grid } from "antd-mobile";
+import { Button, Grid, Modal } from "antd-mobile";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../../utils/url";
 
 import styles from "./index.module.scss";
 
@@ -21,12 +22,49 @@ const menus = [
 
 export default class My extends Component {
   state = {
-    avatar: "http://huangjiangjun.top:8088/img/profile/avatar.png",
-    userName: "游客",
+    avatar: "/img/profile/avatar.png",
+    nickname: "游客",
+    isLogin: false,
+  };
+
+  componentDidMount() {
+    this.getUserInfoData();
+  }
+
+  getUserInfoData = async () => {
+    const result = await this.axios.get("/user");
+
+    if (result.data.status === 200) {
+      this.setState({
+        avatar: result.data.body.avatar,
+        nickname: result.data.body.nickname,
+        isLogin: true,
+      });
+    }
+  };
+
+  logout = () => {
+    Modal.alert("提示", "确认退出吗？", [
+      { text: "取消", onPress: null },
+      {
+        text: "确定",
+        onPress: async () => {
+          const result = await this.axios.post("/user/logout");
+
+          if (result.data.status === 200) {
+            this.setState({
+              avatar: "/img/profile/avatar.png",
+              nickname: "游客",
+              isLogin: false,
+            });
+          }
+        },
+      },
+    ]);
   };
 
   render() {
-    const { avatar, userName } = this.state;
+    const { avatar, nickname, isLogin } = this.state;
 
     return (
       <div className={styles.root}>
@@ -39,20 +77,38 @@ export default class My extends Component {
           />
           <div className={styles.info}>
             <div className={styles.myIcon}>
-              <img className={styles.avatar} src={avatar} alt="" />
+              <img
+                className={styles.avatar}
+                src={`${BASE_URL}${avatar}`}
+                alt=""
+              />
             </div>
             <div className={styles.user}>
-              <div className={styles.name}>{userName}</div>
-              <div className={styles.edit}>
-                <Button
-                  onClick={() => this.props.history.push("/login")}
-                  inline
-                  type="primary"
-                  size="small"
-                >
-                  去登陆
-                </Button>
-              </div>
+              <div className={styles.name}>{nickname}</div>
+              {isLogin ? (
+                <div>
+                  <div onClick={this.logout} className={styles.auth}>
+                    <span>退出</span>
+                  </div>
+                  <div className={styles.edit}>
+                    编辑个人资料
+                    <span className={styles.arrow}>
+                      <i className="iconfont icon-arrow"></i>
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.edit}>
+                  <Button
+                    onClick={() => this.props.history.push("/login")}
+                    inline
+                    type="primary"
+                    size="small"
+                  >
+                    去登陆
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
