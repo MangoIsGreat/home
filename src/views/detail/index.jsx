@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import MyNavBar from "../../components/MyNavBar";
 import HouseMatch from "../../components/HouseMatch";
 import HouseItem from "../../components/HouseItem";
-import { Carousel, Flex, Modal } from "antd-mobile";
+import { Carousel, Flex, Modal, Toast } from "antd-mobile";
 import { BASE_URL } from "../../utils/url";
 import { isLogin } from "../../utils/token";
 
@@ -67,6 +67,9 @@ export default class Detail extends Component {
 
   componentDidMount() {
     this.getDetailData();
+
+    // 查看是否收藏
+    this.getIsFavorite();
   }
 
   getDetailData = async () => {
@@ -87,6 +90,18 @@ export default class Detail extends Component {
       );
     }
   };
+
+  async getIsFavorite() {
+    const result = await this.axios.get(
+      `/user/favorites/${this.props.match.params.id}`
+    );
+
+    if (result.data.status === 200) {
+      this.setState({
+        isFavorite: result.data.body.isFavorite,
+      });
+    }
+  }
 
   renderSwiper = () => {
     const { houseImg } = this.state.detail;
@@ -316,7 +331,7 @@ export default class Detail extends Component {
     map.addOverlay(label); // 将标注添加到地图中
   };
 
-  favoriteOrNot = () => {
+  favoriteOrNot = async () => {
     // 判断是否登录，没有登录，则弹出模态框
     if (!isLogin()) {
       Modal.alert("提示", "登录后才能收藏房源，是否去登录？", [
@@ -326,6 +341,27 @@ export default class Detail extends Component {
 
       return;
     }
+
+    // 如果登录，继续往下执行
+    const isFavorite = this.state.isFavorite;
+
+    let result = null;
+    if (isFavorite) {
+      // 收藏状态，点击取消收藏
+      result = await this.axios.delete(
+        `/user/favorites/${this.props.match.params.id}`
+      );
+    } else {
+      // 非收藏状态，点击收藏
+      result = await this.axios.post(
+        `/user/favorites/${this.props.match.params.id}`
+      );
+    }
+
+    Toast.info(result.data.description, 1);
+    this.setState({
+      isFavorite: !isFavorite,
+    });
   };
 
   render() {
