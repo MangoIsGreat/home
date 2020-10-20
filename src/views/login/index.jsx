@@ -78,7 +78,11 @@ export default withFormik({
       setToken(result.data.body.token);
 
       // 跳转，返回
-      props.history.goBack();
+      if (props.location.state) {
+        props.history.replace(props.location.state.to);
+      } else {
+        props.history.goBack();
+      }
     } else {
       Toast.info(result.data.description, 1.5);
     }
