@@ -66,6 +66,8 @@ export default class HouseMatch extends Component {
       supporting = HOUSE_PACKAGE.filter((item) =>
         props.data.includes(item.name)
       );
+    } else {
+      supporting = HOUSE_PACKAGE;
     }
 
     this.state = {
