@@ -7,6 +7,7 @@ import { getCurrentCity } from "../../../utils/city";
 export default class RentSearch extends Component {
   state = {
     keyword: "",
+    list: null,
   };
 
   async componentDidMount() {
@@ -33,7 +34,17 @@ export default class RentSearch extends Component {
         name: this.state.keyword,
       },
     });
+
+    if (result.data.status === 200) {
+      this.setState({
+        list: result.data.body,
+      });
+    }
   }, 500);
+
+  selectCommunity = ({ community, communityName }) => {
+    console.log(community, communityName);
+  };
 
   /**
   debounce = (fn, delay = 200) => {
@@ -62,7 +73,7 @@ export default class RentSearch extends Component {
    */
 
   render() {
-    const { keyword } = this.state;
+    const { keyword, list } = this.state;
 
     return (
       <div className={styles.root}>
@@ -70,9 +81,23 @@ export default class RentSearch extends Component {
           placeholder="请输入小区或地址"
           value={keyword}
           onChange={this.changeValue}
-          onSubmit={this.search}
           onCancel={() => this.props.history.goBack()}
         />
+        {list && (
+          <ul className={styles.tips}>
+            {list.map((item, index) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => this.selectCommunity(item)}
+                  className={styles.tip}
+                >
+                  {item.communityName}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     );
   }
