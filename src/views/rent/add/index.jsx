@@ -8,6 +8,7 @@ import {
   Picker,
   ImagePicker,
   TextareaItem,
+  Flex,
 } from "antd-mobile";
 
 const Item = List.Item;
@@ -66,7 +67,9 @@ export default class RentAdd extends Component {
           <Item
             extra={communityName || "请输入小区名称"}
             arrow="horizontal"
-            onClick={() => {}}
+            onClick={() => {
+              this.props.history.push("/rent/search");
+            }}
           >
             小区名称
           </Item>
@@ -106,6 +109,10 @@ export default class RentAdd extends Component {
         <List renderHeader={() => "房屋描述"} className="my-list">
           <TextareaItem rows={5} placeholder="请输入房屋描述" />
         </List>
+        <Flex className={styles.bottom}>
+          <Flex.Item className={styles.cancel}>取消</Flex.Item>
+          <Flex.Item className={styles.confirm}>提交</Flex.Item>
+        </Flex>
       </div>
     );
   }
