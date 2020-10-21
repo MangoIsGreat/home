@@ -3,8 +3,11 @@ import styles from "./index.module.scss";
 import debounce from "lodash/debounce";
 import { SearchBar } from "antd-mobile";
 import { getCurrentCity } from "../../../utils/city";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as communityActionCreator from "../../../store/actionCreators/communityActionCreator";
 
-export default class RentSearch extends Component {
+class RentSearch extends Component {
   state = {
     keyword: "",
     list: null,
@@ -43,7 +46,8 @@ export default class RentSearch extends Component {
   }, 500);
 
   selectCommunity = ({ community, communityName }) => {
-    console.log(community, communityName);
+    this.props.setCommunity({ community, communityName });
+    this.props.history.goBack();
   };
 
   /**
@@ -102,3 +106,9 @@ export default class RentSearch extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(communityActionCreator, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(RentSearch);
