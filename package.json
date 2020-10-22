@@ -1,6 +1,7 @@
 {
   "name": "home",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -10,6 +11,7 @@
     "axios": "^0.20.0",
     "babel-plugin-import": "^1.13.0",
     "classnames": "^2.2.6",
+    "cross-env": "^7.0.2",
     "customize-cra": "^1.0.0",
     "formik": "^2.2.0",
     "lodash": "^4.17.20",
@@ -30,7 +32,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },

@@ -1,19 +1,25 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Home from "../home";
-import houseList from "../houseList";
-import News from "../news";
-import My from "../my";
-import NotFound from "../NotFound";
+// import Home from "../home";
+// import houseList from "../houseList";
+// import News from "../news";
+// import My from "../my";
+// import NotFound from "../NotFound";
 import { TabBar } from "antd-mobile";
 
 import styles from "./index.module.scss";
+
+const Home = React.lazy(() => import("../home"));
+const houseList = React.lazy(() => import("../houseList"));
+const News = React.lazy(() => import("../news"));
+const My = React.lazy(() => import("../my"));
+const NotFound = React.lazy(() => import("../NotFound"));
 
 export default class Layout extends Component {
   constructor(props) {
     super();
     this.state = {
-      selectedPath: props.location.pathname
+      selectedPath: props.location.pathname,
     };
   }
 
@@ -52,13 +58,13 @@ export default class Layout extends Component {
               selectedIcon={<i className={`iconfont ${item.icon}`} />}
               selected={this.state.selectedPath === item.path}
               onPress={() => {
-                  this.setState({
-                    selectedPath: item.path
-                  })
+                this.setState({
+                  selectedPath: item.path,
+                });
 
-                  if (this.state.selectedPath !== item.path) {
-                    this.props.history.push(item.path)
-                  }
+                if (this.state.selectedPath !== item.path) {
+                  this.props.history.push(item.path);
+                }
               }}
             ></TabBar.Item>
           );
@@ -71,14 +77,16 @@ export default class Layout extends Component {
     return (
       <div className={styles.layout}>
         <div>
-          <Switch>
-            <Route path="/layout/index" component={Home} />
-            <Route path="/layout/houselist" component={houseList} />
-            <Route path="/layout/news" component={News} />
-            <Route path="/layout/my" component={My} />
-            <Redirect exact from="/layout" to="/layout/index" />
-            <Route component={NotFound} />
-          </Switch>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Switch>
+              <Route path="/layout/index" component={Home} />
+              <Route path="/layout/houselist" component={houseList} />
+              <Route path="/layout/news" component={News} />
+              <Route path="/layout/my" component={My} />
+              <Redirect exact from="/layout" to="/layout/index" />
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
         </div>
 
         {/* TabBar */}
