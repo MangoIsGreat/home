@@ -52,13 +52,35 @@ class RentAdd extends Component {
         communityName: props.communityName,
       },
       files: [], // 存放上传的图片
+      description: "", // 房屋描述
+      floor: null, // 房屋楼层
+      oriented: null, // 房屋朝向
+      price: "", // 租金
+      roomType: null, // 房屋类型
+      size: "", // 尺寸
+      supporting: "", // 房屋配套
+      title: "", // 房屋标题
     };
   }
+
+  changeValue = (name, value) => {
+    this.setState({
+      [name]: value,
+    });
+  };
 
   render() {
     const {
       community: { communityName },
       files,
+      description,
+      floor,
+      oriented,
+      price,
+      roomType,
+      size,
+      supporting,
+      title,
     } = this.state;
 
     return (
@@ -74,28 +96,57 @@ class RentAdd extends Component {
           >
             小区名称
           </Item>
-          <InputItem placeholder="请输入租金/月" extra="¥/月">
+          <InputItem
+            value={price}
+            onChange={(val) => this.changeValue("price", val)}
+            placeholder="请输入租金/月"
+            extra="¥/月"
+          >
             租&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金
           </InputItem>
-          <InputItem placeholder="建筑面积" extra="㎡">
+          <InputItem
+            value={size}
+            onChange={(val) => this.changeValue("size", val)}
+            placeholder="建筑面积"
+            extra="㎡"
+          >
             建筑面积
           </InputItem>
-          <Picker data={roomTypeData} cols={1}>
+          <Picker
+            data={roomTypeData}
+            value={[roomType]}
+            onChange={(val) => this.changeValue("roomType", val[0])}
+            cols={1}
+          >
             <List.Item arrow="horizontal">
               户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
             </List.Item>
           </Picker>
-          <Picker data={floorData} cols={1}>
+          <Picker
+            value={[floor]}
+            onChange={(val) => this.changeValue("floor", val[0])}
+            data={floorData}
+            cols={1}
+          >
             <List.Item arrow="horizontal">所在楼层</List.Item>
           </Picker>
-          <Picker data={orientedData} cols={1}>
+          <Picker
+            value={[oriented]}
+            onChange={(val) => this.changeValue("oriented", val[0])}
+            data={orientedData}
+            cols={1}
+          >
             <List.Item arrow="horizontal">
               朝&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向
             </List.Item>
           </Picker>
         </List>
         <List renderHeader={() => "房屋标题"} className="my-list">
-          <InputItem placeholder="请输入标题（例如：整租 小区名 2室 5000元）"></InputItem>
+          <InputItem
+            value={title}
+            onChange={(val) => this.changeValue("title", val)}
+            placeholder="请输入标题（例如：整租 小区名 2室 5000元）"
+          ></InputItem>
         </List>
         <List renderHeader={() => "房屋头像"} className="my-list">
           <ImagePicker
