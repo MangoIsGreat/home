@@ -10,6 +10,8 @@ import {
   ImagePicker,
   TextareaItem,
   Flex,
+  Modal,
+  Toast,
 } from "antd-mobile";
 
 const Item = List.Item;
@@ -73,6 +75,95 @@ class RentAdd extends Component {
     this.setState({
       files,
     });
+  };
+
+  // 取消
+  cancel = () => {
+    Modal.alert("提示", "放弃发布房源?", [
+      {
+        text: "放弃",
+        onPress: () => this.props.history.goBack(),
+      },
+      { text: "继续编辑", onPress: null },
+    ]);
+  };
+
+  // 发布房源
+  publishHouse = async () => {
+    // 校验数据完整性
+    const {
+      community: { community },
+      files,
+      price,
+      size,
+      title,
+      description,
+      roomType,
+      floor,
+      oriented,
+      supporting,
+    } = this.state;
+
+    if (!community) {
+      Toast.info("请选择小区", 1);
+      return;
+    }
+
+    if (price.trim().length === 0) {
+      Toast.info("请输入价格", 1);
+      return;
+    }
+
+    if (size.trim().length === 0) {
+      Toast.info("建筑面积", 0.8);
+      return;
+    }
+
+    if (!roomType) {
+      Toast.info("请选择户型", 0.8);
+      return;
+    }
+
+    if (!floor) {
+      Toast.info("请选择所在楼层", 0.8);
+      return;
+    }
+
+    if (!oriented) {
+      Toast.info("请选择朝向", 0.8);
+      return;
+    }
+
+    if (title.trim().length === 0) {
+      Toast.info("请输入标题", 0.8);
+      return;
+    }
+
+    if (files.length === 0) {
+      Toast.info("请上传头像", 0.8);
+      return;
+    }
+
+    if (supporting.trim().length === 0) {
+      Toast.info("请选择房屋配套", 0.8);
+      return;
+    }
+
+    const formData = new FormData();
+    files.forEach((item) => {
+      formData.append("file", item.file);
+    });
+
+    const result = this.axios.post("/houses/image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (result.data.status !== 200) {
+      Toast.info("上传失败", 1);
+      return;
+    }
   };
 
   render() {
@@ -172,8 +263,12 @@ class RentAdd extends Component {
           <TextareaItem rows={5} placeholder="请输入房屋描述" />
         </List>
         <Flex className={styles.bottom}>
-          <Flex.Item className={styles.cancel}>取消</Flex.Item>
-          <Flex.Item className={styles.confirm}>提交</Flex.Item>
+          <Flex.Item onClick={this.cancel} className={styles.cancel}>
+            取消
+          </Flex.Item>
+          <Flex.Item onClick={this.publishHouse} className={styles.confirm}>
+            提交
+          </Flex.Item>
         </Flex>
       </div>
     );
