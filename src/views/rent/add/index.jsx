@@ -69,6 +69,12 @@ class RentAdd extends Component {
     });
   };
 
+  onChange = (files, type, index) => {
+    this.setState({
+      files,
+    });
+  }
+
   render() {
     const {
       community: { communityName },
@@ -151,6 +157,7 @@ class RentAdd extends Component {
         <List renderHeader={() => "房屋头像"} className="my-list">
           <ImagePicker
             files={files}
+            onChange={this.onChange}
             selectable={files.length < 9}
             multiple={true}
           />
