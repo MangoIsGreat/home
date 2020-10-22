@@ -73,7 +73,7 @@ class RentAdd extends Component {
     this.setState({
       files,
     });
-  }
+  };
 
   render() {
     const {
@@ -163,7 +163,10 @@ class RentAdd extends Component {
           />
         </List>
         <List renderHeader={() => "房屋配套"} className="my-list">
-          <HouseMatch />
+          <HouseMatch
+            selectable
+            onChange={(val) => this.setState({ supporting: val })}
+          />
         </List>
         <List renderHeader={() => "房屋描述"} className="my-list">
           <TextareaItem rows={5} placeholder="请输入房屋描述" />

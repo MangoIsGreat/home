@@ -72,17 +72,49 @@ export default class HouseMatch extends Component {
 
     this.state = {
       supporting,
+      selectValues: [],
     };
   }
 
+  toggle = (name) => {
+    // 做是否可选的控制
+    if (!this.props.selectable) return;
+
+    let oldSelectValues = this.state.selectValues;
+    if (oldSelectValues.includes(name)) {
+      // 代表之前存在过,移除
+      oldSelectValues = oldSelectValues.filter((item) => item !== name);
+    } else {
+      // 之前没有
+      oldSelectValues.push(name);
+    }
+
+    this.setState(
+      {
+        selectValues: oldSelectValues,
+      },
+      () => {
+        this.props.onChange(this.state.selectValues.join("|"));
+      }
+    );
+  };
+
   render() {
-    let { supporting } = this.state;
+    let { supporting, selectValues } = this.state;
 
     return (
       <ul className={styles.root}>
         {supporting.map((item) => {
           return (
-            <li key={item.id} className={styles.item}>
+            <li
+              key={item.id}
+              onClick={() => {
+                this.toggle(item.name);
+              }}
+              className={classNames(styles.item, {
+                [styles.active]: selectValues.includes(item.name),
+              })}
+            >
               <p>
                 <i
                   className={classNames(`iconfont ${item.icon}`, styles.icon)}
@@ -96,3 +128,7 @@ export default class HouseMatch extends Component {
     );
   }
 }
+
+HouseMatch.defaultProps = {
+  selectable: false,
+};
