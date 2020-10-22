@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MyNavBar from "../../../components/MyNavBar";
 import styles from "./index.module.scss";
 import HouseMatch from "../../../components/HouseMatch";
+import { connect } from "react-redux";
 import {
   List,
   InputItem,
@@ -41,14 +42,14 @@ const orientedData = [
   { label: "西北", value: "ORIEN|80795f1a-e32f-feb9" },
 ];
 
-export default class RentAdd extends Component {
-  constructor() {
+class RentAdd extends Component {
+  constructor(props) {
     super();
 
     this.state = {
       community: {
-        community: null,
-        communityName: null,
+        community: props.community,
+        communityName: props.communityName,
       },
       files: [], // 存放上传的图片
     };
@@ -117,3 +118,9 @@ export default class RentAdd extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ community }) => {
+  return community;
+};
+
+export default connect(mapStateToProps, null)(RentAdd);
