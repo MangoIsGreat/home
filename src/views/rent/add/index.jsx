@@ -154,7 +154,7 @@ class RentAdd extends Component {
       formData.append("file", item.file);
     });
 
-    const result = this.axios.post("/houses/image", formData, {
+    const result = await this.axios.post("/houses/image", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -163,6 +163,28 @@ class RentAdd extends Component {
     if (result.data.status !== 200) {
       Toast.info("上传失败", 1);
       return;
+    }
+
+    // 发布
+    const data = {
+      title,
+      description,
+      houseImg: result.data.body.join("|"),
+      oriented,
+      supporting,
+      price,
+      roomType,
+      size,
+      floor,
+      community,
+    };
+
+    const res = await this.axios.post("/user/houses", data);
+    if (res.data.status === 200) {
+      Toast.info("发布成功", 1.5, () => {
+        // 成功之后跳转到我的出租列表中去
+        this.props.history.push("/rent");
+      });
     }
   };
 
